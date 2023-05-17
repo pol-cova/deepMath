@@ -1,0 +1,12 @@
+{
+  "base_url": "/",
+  "hostname": "localhost",
+  "notebook_dir": "/Users/paulcontreras/Desktop/math/ai",
+  "password": false,
+  "pid": 1831,
+  "port": 8888,
+  "secure": false,
+  "sock": "",
+  "token": "98cfe6f7c26c05aff0d28d7f98ba02dfaa750afce67308d9",
+  "url": "http://localhost:8888/"
+}

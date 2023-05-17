@@ -1,0 +1,12 @@
+{
+  "base_url": "/",
+  "hostname": "localhost",
+  "notebook_dir": "/Users/paulcontreras",
+  "password": false,
+  "pid": 1951,
+  "port": 8888,
+  "secure": false,
+  "sock": "",
+  "token": "76ff3756ce5b839f7655cea3284f5bf10770851469c32335",
+  "url": "http://localhost:8888/"
+}
