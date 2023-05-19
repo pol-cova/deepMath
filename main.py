@@ -1,4 +1,4 @@
-import tkinter as tk
+# Import all libraries
 from tkinter import messagebox
 import customtkinter
 import os
@@ -8,13 +8,14 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Set direction for .so file
+# Set direction for .so file that load dynamic library
 open_calc = CDLL('./opencalc.so')
 
 # Set appearance for the main application
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 
+# Initialize the list for the values
 x_time_piedra = []
 y_pos_piedra = []
 x_pos_piedra = []
@@ -68,7 +69,7 @@ class App(customtkinter.CTk):
 
         # Sidebar items
         # Logo header
-        self.logo_header = customtkinter.CTkLabel(self.sidebar_frame, text="OpenCalc",
+        self.logo_header = customtkinter.CTkLabel(self.sidebar_frame, text="DeepMath",
                                                   font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_header.grid(row=0, column=0, padx=20, pady=(20, 10))
         # Buttons
@@ -325,16 +326,11 @@ class App(customtkinter.CTk):
                                                    text="Grafica de impacto", fg_color="#1B65A7",
                                                    hover_color=("gray70", "gray30"), state="disabled",
                                                    command=self.graph_case_3)
-        self.graph_btn_4 = customtkinter.CTkButton(self.graph_data_frame, height=40, border_spacing=7,
-                                                   text="Grafica de velocidad", fg_color="#1B65A7",
-                                                   hover_color=("gray70", "gray30"), state="disabled",
-                                                   command=self.case_3_calculator)
         # Grid configuration list
         self.graph_header_label.grid(row=0, column=1, padx=5)
         self.graph_btn_1.grid(row=1, column=1, pady=10)
         self.graph_btn_2.grid(row=2, column=1, pady=10)
         self.graph_btn_3.grid(row=3, column=1, pady=10)
-        self.graph_btn_4.grid(row=4, column=1, pady=10)
 
     def return_to_home(self):
         print("Your are redirected to home")
@@ -361,16 +357,15 @@ class App(customtkinter.CTk):
         self.graph_btn_1.configure(state="normal")
         self.graph_btn_2.configure(state="normal")
         self.graph_btn_3.configure(state="normal")
-        self.graph_btn_4.configure(state="normal")
 
         # Settings for math calculus-
 
         velocidad_inicial = float(velocidad_inicial)
 
-        if velocidad_inicial < 0:
+        if velocidad_inicial <= 0:
             messagebox.showerror(title="DEV ERROR", message="Tu velocidad es negativa prueba otro dato!!!!")
         velocidad_pato = float(velocidad_pato)
-        if velocidad_pato < 0:
+        if velocidad_pato <= 0:
             messagebox.showerror(title="DEV ERROR", message="Tu velocidad es negativa prueba otro dato!!!!")
         altura_pato = float(altura_pato)
         if altura_pato <= 0:
@@ -402,6 +397,16 @@ class App(customtkinter.CTk):
         ft = flight_time(initial_velocity, rad_angle, g_constant)
         hi = impact_height(initial_velocity, duck_velocity, rad_angle, g_constant)
         print(hi)
+
+        # It
+        impact_time = ((velocidad_inicial * math.sin(angle)) + math.sqrt(velocidad_inicial**2 * math.sin(angle)**2-2*9.81*hi))/9.81
+
+        # Velocidad
+        vox_p = velocidad_inicial * math.cos(angle)
+        voy_p = velocidad_inicial * math.sin(angle) - (9.81*impact_time)
+
+        vf = math.sqrt(vox_p**2 + voy_p**2)
+        direction_of_v = math.atan(voy_p/vox_p)
 
         # Aproximation
         difference = abs(altura_pato-hi)
@@ -444,7 +449,7 @@ class App(customtkinter.CTk):
 
         if difference < epsilon:
             messagebox.showerror(title='Estatus de impacto',
-                                 message='Si impactan consulte los resultados')
+                                 message=f'Si impactan consulte los resultados, la velocidad al momento del impacto es Vipm = {vf} m/s su dirección es {direction_of_v} rad')
         elif altura_pato > hi:
             messagebox.showerror(title='Estatus de impacto',
                                  message='No impactan, el pato vuela más alto que la piedra')
@@ -466,13 +471,12 @@ class App(customtkinter.CTk):
         self.graph_btn_1.configure(state="normal")
         self.graph_btn_2.configure(state="normal")
         self.graph_btn_3.configure(state="normal")
-        self.graph_btn_4.configure(state="normal")
 
         # Settings for math calculus-
 
         velocidad_pato = float(velocidad_pato_2)
 
-        if velocidad_pato < 0:
+        if velocidad_pato <= 0:
             messagebox.showerror(title="DEV ERROR", message="Tu velocidad es negativa prueba otro dato!!!!")
 
         altura_pato = float(altura_pato_2)
@@ -560,7 +564,6 @@ class App(customtkinter.CTk):
         self.graph_btn_1.configure(state="normal")
         self.graph_btn_2.configure(state="normal")
         self.graph_btn_3.configure(state="normal")
-        self.graph_btn_4.configure(state="normal")
 
         # Settings for math calculus-
 
@@ -651,7 +654,7 @@ class App(customtkinter.CTk):
         x_time_pato.clear()
         y_pos_pato.clear()
         x_pos_pato.clear()
-
+    # Graph 1 height in function of time
     def graph_case_1(self):
 
         plt.plot(x_time_piedra, y_pos_piedra, label='Piedra')
@@ -662,6 +665,7 @@ class App(customtkinter.CTk):
         plt.plot()
         plt.show()
 
+    # Graph 2 pos y in function of pos x
     def graph_case_2(self):
         plt.plot(x_pos_piedra, y_pos_piedra, label='Piedra')
         plt.plot(x_pos_pato, y_pos_pato, label='Pato', color="red")
@@ -672,12 +676,13 @@ class App(customtkinter.CTk):
         plt.plot()
         plt.show()
 
+    # Graph 3 pos y in function of pos x and show the impact
     def graph_case_3(self):
         plt.plot(x_pos_piedra, y_pos_piedra, label='Piedra')
         plt.plot(x_pos_pato, y_pos_pato, label='Pato', color="red")
         plt.plot(x_pato, y_pato, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="red")
         plt.xlabel('Posición en x ')
-        plt.ylabel('y(x) -> Altura del proyectil')
+        plt.ylabel('y(x) -> Posición en y ')
         plt.title('Grafica de la posición de los 2 objetos')
         plt.legend()
         plt.plot()
